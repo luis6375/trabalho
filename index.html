@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo em Javascript</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+* { margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --title1-color: rgb(34, 16, 43);
+    --title2-color: rgb(253, 231, 106);
+}
+
+body {
+    background-color: var(--title1-color);
+    font-family: 'Lobster', cursive;
+    color: white;
+}
+
+header {
+    background: var(--title2-color);
+    padding: 1em;
+}
+
+header h1{
+    color: var(--title1-color);
+    text-align: center;
+    font-size: 3em;
+}
+
+.pontuacao {
+    border: solid white;
+    width: 10em;
+    font-size: 1.5em;
+    margin: 1em auto;
+    border-radius: 4px;
+    padding: 0.7em 1em;
+    position: relative;
+    text-align: center;
+}
+.pontuacao span {
+    font-size: 2em;
+}
+.pontuacao .jogador {
+    background: rgb(59, 75, 109);
+    padding: 0.2em;
+    font-size: 0.8em;
+}
+
+.pontuacao #placaUsuário {
+    position: absolute;
+    top: 1em;
+    left: -2em;
+}
+
+.pontuacao #placaComputador{
+    position: absolute;
+    top: 1em;
+    right: -2.8em;
+}
+
+.resultado {
+    font-size: 2em;
+}
+
+.resultado p{
+    text-align: center;
+}
+.opções {
+    text-align: center;
+}
+.opção{
+    display: inline-block;
+    margin: 1em;
+} 
+
+.opções img{
+    background: var(--title2-color);
+    height: 7em;
+    width: 7em;
+    border-radius: 100px;
+    border: 4px solid white;
+}
+
+.opções img:hover {
+    background: whitesmoke;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#mensagemJogar {
+    text-align: center;
+    font-size: 2em;
+    margin-top: 1em;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Pedra Papel Tesoura</h1>
+    </header>
+
+    <div class="pontuacao">
+        <div id="placaUsuário" class="jogador">Usuário</div>
+        <div id="placaComputador" class="jogador">Computador</div>
+        <span id="pontosUsuário">0</span>:<span id="pontosComputador">0</span>
+    </div>
+
+    <div class="resultado">
+        <p>Escolha pedra, papel ou tesoura. Jogue!</p>
+    </div>
+
+    <div class="opções">
+        <div class="opção">
+            <img id="opçãoPedra" src="img/images (2).png" alt="opção Pedra">
+        </div>
+        <div class="opção">
+            <img id="opçãoPapel" src="img/images (1).png" alt="opção Papel">
+        </div>
+        <div class="opção">
+            <img id="opçãoTesoura" src="img/images.png" alt="opção Tesoura">
+        </div>
+    </div>
+
+    <p id="mensagemJogar">Escolha sua opção!</p>
+    
+
+    <script>
+        //declaração das variáveis do placar:
+let userScore = 0;
+let computerScore = 0;
+
+// declaração das constantes. Buscando elementos no html para as funções:
+const userScore_span = document.getElementById("pontosUsuário");
+const computerScore_span = document.getElementById("pontosComputador");
+const scoreBoard_div = document.querySelector(".pontuacao");
+const result_p = document.querySelector(".resultado > p");
+const rock_div = document.getElementById("opçãoPedra");
+const paper_div = document.getElementById("opçãoPapel");
+const scissors_div = document.getElementById("opçãoTesoura");
+
+//Montar função de computador para sortear uma opção aleatória
+function getComputerChoice(){
+    const choices = ["opçãoPedra","opçãoPapel", "opçãoTesoura"];
+    const randomNumber = Math.floor(Math.random()*3);
+    return choices [randomNumber];
+}
+
+//Converter as Ids em Palavras para mostrar na tela 
+function converterPalavra(palavra){
+    if (palavra === "opçãoPedra") return "Pedra";
+    if (palavra === "opçãoPapel") return "Papel";
+    else return "Tesoura";
+}
+
+//função para quando o usuário ou computador ganham ou empatam. Adição de pontuação no placar e alteração do parágrafo.
+function usuárioGanhou(userChoise,computerChoice){
+    userScore++;
+    userScore_span.innerHTML = userScore;
+    computerScore_span.innerHTML = computerScore;
+    const smallUserWord = "user".fontsize(3).sup();
+    const smallComputerWord = "comp".fontsize(3).sup();
+    result_p.innerHTML = `${converterPalavra(userChoise)}${smallUserWord} ganha de ${converterPalavra(computerChoice)}${smallComputerWord}. Você venceu!`
+
+}
+
+function usuárioPerdeu(userChoise,computerChoice){
+    computerScore++;
+    userScore_span.innerHTML = userScore;
+    computerScore_span.innerHTML = computerScore;
+    const smallUserWord = "user".fontsize(3).sup();
+    const smallComputerWord = "comp".fontsize(3).sup();
+    result_p.innerHTML = `${converterPalavra(userChoise)}${smallUserWord} perde de  ${converterPalavra(computerChoice)}${smallComputerWord}. Você perdeu!`
+}
+
+function usuárioEmpatou (userChoise,computerChoice){
+    userScore_span.innerHTML = userScore;
+    computerScore_span.innerHTML = computerScore;
+    const smallUserWord = "user".fontsize(3).sup();
+    const smallComputerWord = "comp".fontsize(3).sup();
+    result_p.innerHTML = `${converterPalavra(userChoise)}${smallUserWord} é igual à ${converterPalavra(computerChoice)}${smallComputerWord}. Vocês empataram!`
+}
+
+//função para o jogo. Verifica em ganha ou empata
+function game(userChoise){
+    const computerChoice = getComputerChoice();
+    switch (userChoise +" "+ computerChoice) {
+
+        case "opçãoPedra opçãoTesoura":
+        case "opçãoPapel opçãoPedra":
+        case "opçãoTesoura opçãoPapel":
+            usuárioGanhou(userChoise,computerChoice);
+            break;
+
+        case "opçãoPedra opçãoPapel":
+        case "opçãoPapel opçãoTesoura":
+        case "opçãoTesoura opçãoPedra":
+            usuárioPerdeu(userChoise,computerChoice);
+            break;
+
+        case "opçãoPedra opçãoPedra":
+        case "opçãoPapel opçãoPapel":
+        case "opçãoTesoura opçãoTesoura":
+            usuárioEmpatou(userChoise,computerChoice);
+            break;
+    }
+}
+
+//função para eventos com os botões de seleção pedra, papel e tesoura.
+function main (){
+    rock_div.addEventListener('click',function() {
+        game("opçãoPedra");
+    })
+
+    paper_div.addEventListener('click',function() {
+        game("opçãoPapel")
+    })
+
+    scissors_div.addEventListener('click',function() {
+        game("opçãoTesoura")
+    })
+}
+
+main();
+    </script>
+</body>
+</html>
